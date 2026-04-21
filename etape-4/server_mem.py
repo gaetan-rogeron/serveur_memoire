@@ -8,7 +8,7 @@ if __name__ == "__main__":
     debug = False
     sauvegarde_periodique = False
 
-    cmd_backend = ["python3","-u","server_mem_backend.py",taille_memoire] # -u pour enlever le buffering
+    cmd_backend = ["python3","-u","server_mem_backend.py",taille_memoire] # -u pour enlever le buffering "toutes les reponses viennent apres le ctrl+D"
     cmd_frontend =["python3","-u","server_mem_frontend.py",taille_memoire]
 
     if "--periodic-log" in sys.argv:
