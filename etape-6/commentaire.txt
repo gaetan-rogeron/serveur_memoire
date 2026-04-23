@@ -1,0 +1,21 @@
+à quoi servent les différentes méthodes?
+
+    __init__ est le constructeur, il initialise les variables des paramètres
+    et envoie un PUT au serveur pour allouer le segment
+
+    __enter__ elle renvoie l'objet lui même
+
+    request crée un nouvequ socket tcp, se connecte, envoie la commande, 
+    attend la reponse, gere le message avec debug ou non puis ferme le socket
+
+    __getitem__ permet d'envoyer la requete "GET seg index" quand on ecrit seg[index]
+    surcharge [] en general
+
+    __setitem__ permet d'envoie la requete POST seg index value quand on ecrit seg[index] = value
+    
+    __exit__ permet de supprimer le segment quand on quitte meme si le programme plante 
+
+    __len__ permet d'utiliser len(mem) pour avoir la taille du segment
+
+    free permet d'envoyer la requete DELETE vers le serveur
+

@@ -99,7 +99,12 @@ if __name__ == "__main__":
             if not data :
                 client_socket.close()
                 continue
+            
+            # fix pour etape 6 : rajoute un \n a la fin vu que remotememory ne le fait pas
+            if not data.endswith(b'\n'):
+                data += b'\n'
 
+            
             # envoie la requete dans le pipe vers Frontend
             os.write(w_StoF, data)
 
