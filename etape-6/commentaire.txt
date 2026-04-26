@@ -1,21 +1,111 @@
+[6.1]
+
 à quoi servent les différentes méthodes?
 
     __init__ est le constructeur, il initialise les variables des paramètres
-    et envoie un PUT au serveur pour allouer le segment
-
-    __enter__ elle renvoie l'objet lui même
+    et envoie un PUT au serveur pour allouer le segment si alloc = true
 
     request crée un nouvequ socket tcp, se connecte, envoie la commande, 
     attend la reponse, gere le message avec debug ou non puis ferme le socket
 
     __getitem__ permet d'envoyer la requete "GET seg index" quand on ecrit seg[index]
-    surcharge [] en general
+    surcharge [] en general (methode python)
 
-    __setitem__ permet d'envoie la requete POST seg index value quand on ecrit seg[index] = value
+    __setitem__ permet d'envoie la requete POST seg index value quand on ecrit seg[index] = value (methode python)
     
-    __exit__ permet de supprimer le segment quand on quitte meme si le programme plante 
 
     __len__ permet d'utiliser len(mem) pour avoir la taille du segment
 
     free permet d'envoyer la requete DELETE vers le serveur
 
+
+
+À quoi servent les méthodes __enter__ et __exit__ ? 
+
+    les deux methodes permettent de definir le context manager, cela permet d'utiliser l'objet avec "with"
+
+        __enter__ est execute au debut du bloc with, et dans ce cas elle renvoie l'objet lui meme
+
+        __exit__ permet de supprimer le segment (elle envoie une requete delete) quand on quitte meme si le programme plante, elle est execute a la sortie du bloc with 
+        evite les fuites de memoire
+
+Le test ? 
+    on fait un script avec un bloc with et qui provoque volontairement un crash
+    log : "
+TEST
+[debug] Creating socket
+[debug] Connecting to remote memory at localhost:12345
+[debug] Connected
+[debug] Sending request: 'PUT testseg 100'
+[debug] Received response: 'ok'
+[debug] Creating socket
+[debug] Connecting to remote memory at localhost:12345
+[debug] Connected
+[debug] Sending request: 'POST testseg 0 42'
+[debug] Received response: 'ok'
+[debug] Creating socket
+[debug] Connecting to remote memory at localhost:12345
+[debug] Connected
+[debug] Sending request: 'GET testseg 0'
+[debug] Received response: '42'
+Valeur lue : 42
+ceci est un crash.
+[debug] Creating socket
+[debug] Connecting to remote memory at localhost:12345
+[debug] Connected
+[debug] Sending request: 'DELETE testseg'
+[debug] Received response: 'ok'
+CRASH
+"
+
+[6.2]
+
+En lançant deux clients en parallèle dans des segments de noms différents, risque-t-on d’observer une corruption mémoire?
+
+
+    Non car les deux clients sont dans des espaces memoires isoles car le frontend s'assure qu'il n'y a pas d'intersection,
+    et il attribut des addresses physiques 
+
+
+
+
+
+Vérifiez expérimentalement: est-ce que ce que vous observez est conforme à ce que vous attendiez? Si oui, tout est bon, sinon, profitez-en pour essayer de débugger une éventuelle erreur dans le serveur.
+
+    on lance le serveur
+    puis on lance 2 clients en simultanne avec un grand nombre d'entree
+        python3 client.py localhost 12345 segmentA 100 --num_accesses 50000
+        python3 client.py localhost 12345 segmentB 100 --num_accesses 50000
+
+
+[6.3]
+En lançant deux clients en parallèle dans des segments de même nom, risque-t-on d’observer une corruption mémoire?
+    oui a cause d'un probleme de synchronisation
+
+Vérifiez expérimentalement: est-ce que ce que vous observez est conforme à ce que vous attendiez? Si oui, tout est bon, sinon, profitez-en pour essayer de débugger une éventuelle erreur dans le serveur, ou cherchez à ajuster les différents paramètres (taille du segment, nombre d’accès, etc).
+
+    python3 client.py localhost 12345 partagé 100 --num_accesses 50000
+
+
+                    Traceback (most recent call last):
+                    File "/home/gaetan/VsCodeProject/serveur_memoire/etape-6/client.py", line 42, in <module>
+                        _ = mem[index]
+                            ~~~^^^^^^^
+                    File "/home/gaetan/VsCodeProject/serveur_memoire/etape-6/controledmemory.py", line 17, in __getitem__
+                        raise ValueError(f"Memory corruption detected at index {index}: expected {v2}, got {v1}")
+                    ValueError: Memory corruption detected at index 74: expected 19, got 140
+
+
+    python3 client.py localhost 12345 partagé 100 --num_accesses 50000 --no-alloc
+                        
+                        
+                    Traceback (most recent call last):
+                        File "/home/gaetan/VsCodeProject/serveur_memoire/etape-6/client.py", line 42, in <module>
+                            _ = mem[index]
+                                ~~~^^^^^^^
+                        File "/home/gaetan/VsCodeProject/serveur_memoire/etape-6/controledmemory.py", line 11, in __getitem__
+                            v1 = self.memory[index]
+                                ~~~~~~~~~~~^^^^^^^
+                        File "/home/gaetan/VsCodeProject/serveur_memoire/etape-6/remotememory.py", line 48, in __getitem__
+                            return int(response)
+                        ValueError: invalid literal for int() with base 10: "le segment partagé n'existe pas"
