@@ -46,7 +46,7 @@ if __name__ == "__main__":
                 print(f"error: index {indice} out of bounds")
                 continue
             else:
-                # on envoie la portion de bytearray en hex
+                # on envoie la portion de bytearray en hexca
                 print(memoire[indice:indice+taille].hex())
 
         elif mots[0] == "POST" :
@@ -56,7 +56,7 @@ if __name__ == "__main__":
                 continue
 
             indice = int(mots[1])
-            hex_val = int(mots[2])
+            hex_val = mots[2]
             data_bytes = bytearray.fromhex(hex_val)
             taille = len(data_bytes)
 

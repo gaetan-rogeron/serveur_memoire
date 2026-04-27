@@ -1,0 +1,37 @@
+Le systeme de pagination
+
+        au lieu d'envoyer octet par octet au serveur, on recupere des pages entieres (plusieurs octets) grace a fromhex() et hex().
+        on les stocke dans un cache local (bytearray dans le client).
+        ca reduit drastiquement le nombre de requetes reseau et ameliore les performances car on lit et on ecrit directement dans la RAM du clients.
+
+L'algorithme Least recently used
+
+        l'algorithme LRU, quand le cache est plein on cherche la page qui n'a pas ete utilisee depuis le plus longtemps (grace a un timestamp "last_used" mis a jour a chaque acces).
+        on supprime cette page ancienne pour faire de la place a la nouvelle.
+
+Le dirty bit
+
+        c'est un booleen "dirty" dans la table des pages.
+        si on fait une lecture (GET), il reste False. si on fait une ecriture (POST), il passe a True car la page a ete modifiee localement.
+        quand le LRU ejecte une page, on regarde le bit : si "dirty" est True, on doit absolument envoyer un POST au serveur pour sauvegarder la page. 
+        si False, on l'efface simplement. ca reduit encore le trafic reseau.
+
+Modification du exit
+
+        on a ajoute une methode flush() executee juste avant de fermer le programme.
+        elle parcourt le cache et envoie au serveur toutes les pages qui ont "dirty" a True.
+        cela evite de perdre les dernieres modifications locales avant l'envoi de la commande DELETE.
+
+
+Gain de performance 
+
+    Avec le cache :
+        etape-7 git:(main) ✗ time python3 client.py localhost 12345 segCache 100 --num_accesses 10000
+            python3 client.py localhost 12345 segCache 100 --num_accesses 10000  0,02s user 0,02s system 67% cpu 0,055 total
+
+    Sans le cache :
+
+        time python3 client.py localhost 12345 segnocache 100 --num_accesses 10000
+            python3 client.py localhost 12345 segnocache 100 --num_accesses 10000  0,05s user 0,21s system 56% cpu 0,456 total
+
+    soit 0.055 secondes contre 0.456 secondes, c'est environ 10 fois plus rapide.

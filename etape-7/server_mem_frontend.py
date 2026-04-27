@@ -47,71 +47,46 @@ def put(nom, taille, pagesize):
             return
 
     # le PUT echoue
-    affichage_debug()
     print(f"error: not enough memory to create segment {nom} of size {taille}", file=sys.stderr)
 
-def delete(nom):
-    # verification existance
-    if nom in segments_table:
-        del segments_table[nom]
-        affichage_debug()
-        print("ok", file=sys.stderr)
-    else :
-        print(f"error : le segments {nom} n'existe pas", file= sys.stderr)
-
-
 if __name__ == "__main__":
-
     taille_memoire = int(sys.argv[1])
-
     if "--debug" in sys.argv:
         debug = True
     
     for ligne in sys.stdin:
-
         mots = ligne.split()
-
-        # si on entre uniquement entree
-        if not mots:
-            continue
-
+        if not mots: continue
         commande = mots[0]
 
         if commande == "PUT":
-            taille = int(mots[2])
-            put(mots[1], taille)
-
-        elif commande == "DELETE":
-            delete(mots[1])
+            # Syntaxe : PUT <nom> <taille> <pagesize>
+            put(mots[1], int(mots[2]), int(mots[3]))
 
         elif commande == "GET":
-            nom = mots[1]
-            indice = int(mots[2])
-
-            # verification existance
+            # GET nom page_num
+            nom, page_num = mots[1], int(mots[2])
             if nom not in segments_table:
-                print(f"le segment {nom} n'existe pas", file=sys.stderr)
-
-            # verification indice
-            elif indice< 0 or indice>= segments_table[nom]['size']:
-                print("indice invalide", file=sys.stderr)
-
+                print(f"error: {nom} inconnu", file=sys.stderr)
             else:
-                # Traduction addresse virtuelle -> addresse physique
-                addresse_physique = segments_table[nom]['base'] + indice
-                print(f"GET {addresse_physique}")
+                seg = segments_table[nom]
+                # Traduction Page -> Adresse Physique
+                adresse_physique = seg['base'] + (page_num * seg['pagesize'])
+                # On demande au Backend une plage d'octets
+                print(f"GET {adresse_physique} {seg['pagesize']}")
 
         elif commande == "POST":
-            nom = mots[1]
-
-            indice = int(mots[2])
-            octet = int(mots[3])
-
+            # POST nom page_num hex_data
+            nom, page_num, hex_data = mots[1], int(mots[2]), mots[3]
             if nom not in segments_table:
-                print(f"segment {nom} n'existe pas",file = sys.stderr)
-            elif indice < 0 or indice >= segments_table[nom]['size']:
-                print(f"error: index {indice} out of bounds, {nom} size is {segments_table[nom]['size']}", file=sys.stderr)
+                print(f"error: {nom} inconnu", file=sys.stderr)
             else:
-                # traduction et envoie sur stdout
-                addresse_physique = segments_table[nom]['base'] + indice
-                print(f"POST {addresse_physique} {octet}")
+                seg = segments_table[nom]
+                adresse_physique = seg['base'] + (page_num * seg['pagesize'])
+                # On envoie les donnees hex au backend
+                print(f"POST {adresse_physique} {hex_data}")
+
+        elif commande == "DELETE":
+            if mots[1] in segments_table:
+                del segments_table[mots[1]]
+                print("ok", file=sys.stderr)
