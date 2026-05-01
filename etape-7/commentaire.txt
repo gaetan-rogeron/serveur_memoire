@@ -35,3 +35,8 @@ Gain de performance
             python3 client.py localhost 12345 segnocache 100 --num_accesses 10000  0,05s user 0,21s system 56% cpu 0,456 total
 
     soit 0.055 secondes contre 0.456 secondes, c'est environ 10 fois plus rapide.
+
+Comment le parametre sigma influence sur les performances ?
+
+        
+
