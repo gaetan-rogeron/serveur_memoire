@@ -36,7 +36,12 @@ Gain de performance
 
     soit 0.055 secondes contre 0.456 secondes, c'est environ 10 fois plus rapide.
 
-Comment le parametre sigma influence sur les performances ?
+
+Question du prof (entretient TP3) :
+        Comment le parametre sigma influence sur les performances ?
+                C'est l'ecart type entre les addresses dans les requetes automatiques, plus le sigma va etre petit plus les addresses
+                vont etre proche et sur la meme page qui est deja charge en cache, donc l'algorithme LRU n'a besoin d'expulser aucune page ce qui fait 
+                qui les performances seront plus eleve contrairement a un grand sigma
 
         
 

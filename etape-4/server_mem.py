@@ -1,12 +1,15 @@
 import sys, os
 
-if __name__ == "__main__":
+def main():
+    if len(sys.argv) < 3:
+        print("Usage: python3 server_mem.py taille_memoire port (--periodic-log fichier) (--debug)", file=sys.stderr)
+        sys.exit(1)
 
     taille_memoire = sys.argv[1]
     port = sys.argv[2]
 
-    debug = False
     sauvegarde_periodique = False
+    fichier_log = "mem.log" # nom par default 
 
     cmd_backend = ["python3","-u","server_mem_backend.py",taille_memoire] # -u pour enlever le buffering "toutes les reponses viennent apres le ctrl+D"
     cmd_frontend =["python3","-u","server_mem_frontend.py",taille_memoire]
@@ -20,33 +23,39 @@ if __name__ == "__main__":
                 break
 
     if "--debug" in sys.argv:
-        debug = True
         cmd_frontend.append("--debug")
 
 
     # read (sortie) write (entrée) 
-    r,w = os.pipe()
+    r_StoF, w_StoF = os.pipe()
+    r_FtoB, w_FtoB = os.pipe()
 
     pid_frontend = os.fork()
     if pid_frontend == 0 :
-        # pas besoin du read côté frontend
-        os.close(r)
-        # la sortie standard du front va vers l'entré du pipe
-        os.dup2(w, 1)
-        # on ferme l'entrée
-        os.close(w)
-        # on lance le frontend
+        # lit dans le tube 1
+        os.dup2(r_StoF, 0)
+        # ecrit dans le tube 2
+        os.dup2(w_FtoB, 1)
+        
+        # ferme tous les acces originaux pour eviter les fuites
+        os.close(r_StoF)
+        os.close(w_StoF)
+        os.close(r_FtoB)
+        os.close(w_FtoB)
+        
         os.execvp(cmd_frontend[0], cmd_frontend)
         sys.exit(1)
 
     pid_backend = os.fork()
     if pid_backend == 0:
-        # pas besoin du write côté backend
-        os.close(w)
-        # l'entrée standard va vers la sortie du pipe
-        os.dup2(r, 0)
-        # on ferme read
-        os.close(r)
+        # lit le Tube 2
+        os.dup2(r_FtoB, 0)
+        
+        # ferme tout le reste
+        os.close(r_StoF)
+        os.close(w_StoF)
+        os.close(r_FtoB)
+        os.close(w_FtoB)
 
         # si il y a la sauvegarde periodique on redirige la sortie d'erreur vers le fichier log
         if sauvegarde_periodique :
@@ -57,10 +66,21 @@ if __name__ == "__main__":
         sys.exit(1)
 
 
-    os.close(r)
-    os.close(w)
-
-    os.waitpid(pid_backend,0)
-    os.waitpid(pid_frontend,0)
+    os.close(r_StoF)
+    os.close(r_FtoB)
+    os.close(w_FtoB)
 
 
+    try:    
+        for ligne in sys.stdin:
+            os.write(w_StoF, ligne.encode()) # os.write demande des bytes donc .encode()
+    except KeyboardInterrupt:
+        print("Arret du serveur")
+    finally:
+        os.close(w_StoF)
+        os.waitpid(pid_backend,0)
+        os.waitpid(pid_frontend,0)
+
+
+if __name__ == "__main__":
+    main()

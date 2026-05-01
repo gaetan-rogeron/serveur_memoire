@@ -32,30 +32,30 @@
 Le test ? 
     on fait un script avec un bloc with et qui provoque volontairement un crash
     log : "
-TEST
-[debug] Creating socket
-[debug] Connecting to remote memory at localhost:12345
-[debug] Connected
-[debug] Sending request: 'PUT testseg 100'
-[debug] Received response: 'ok'
-[debug] Creating socket
-[debug] Connecting to remote memory at localhost:12345
-[debug] Connected
-[debug] Sending request: 'POST testseg 0 42'
-[debug] Received response: 'ok'
-[debug] Creating socket
-[debug] Connecting to remote memory at localhost:12345
-[debug] Connected
-[debug] Sending request: 'GET testseg 0'
-[debug] Received response: '42'
-Valeur lue : 42
-ceci est un crash.
-[debug] Creating socket
-[debug] Connecting to remote memory at localhost:12345
-[debug] Connected
-[debug] Sending request: 'DELETE testseg'
-[debug] Received response: 'ok'
-CRASH
+                TEST
+                [debug] Creating socket
+                [debug] Connecting to remote memory at localhost:12345
+                [debug] Connected
+                [debug] Sending request: 'PUT testseg 100'
+                [debug] Received response: 'ok'
+                [debug] Creating socket
+                [debug] Connecting to remote memory at localhost:12345
+                [debug] Connected
+                [debug] Sending request: 'POST testseg 0 42'
+                [debug] Received response: 'ok'
+                [debug] Creating socket
+                [debug] Connecting to remote memory at localhost:12345
+                [debug] Connected
+                [debug] Sending request: 'GET testseg 0'
+                [debug] Received response: '42'
+                Valeur lue : 42
+                ceci est un crash.
+                [debug] Creating socket
+                [debug] Connecting to remote memory at localhost:12345
+                [debug] Connected
+                [debug] Sending request: 'DELETE testseg'
+                [debug] Received response: 'ok'
+                CRASH
 "
 
 [6.2]

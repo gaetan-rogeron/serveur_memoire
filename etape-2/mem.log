@@ -1,71 +1,3 @@
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'          ')
-bytearray(b'  -       ')
-bytearray(b'  -       ')
-bytearray(b'  -       ')
-bytearray(b'  -       ')
-bytearray(b'  -       ')
-bytearray(b'  -       ')
-bytearray(b'  -       ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  -   7   ')
-bytearray(b'  - o 7   ')
-bytearray(b'  - o 7   ')
-bytearray(b'  - o 7   ')
-bytearray(b'  - o 7   ')
-bytearray(b'  - o 7   ')
-bytearray(b'  - o 7   ')
-bytearray(b'  - o 7   ')
-bytearray(b'  - o 7   ')
-Traceback (most recent call last):
-  File "/home/gaetan/VsCodeProject/serveur_memoire/etape-2/server_mem_backend.py", line 28, in <module>
-    for ligne in sys.stdin : # lit ligne par ligne jusqu'a un Ctrl + D
-                 ^^^^^^^^^
-KeyboardInterrupt
 [32, 32, 32, 32, 32, 32, 32, 32, 32, 32]
 [32, 32, 32, 32, 32, 32, 32, 32, 32, 32]
 [32, 32, 32, 32, 32, 32, 32, 32, 32, 32]
@@ -78,22 +10,19 @@ KeyboardInterrupt
 [32, 32, 32, 32, 32, 32, 32, 32, 32, 32]
 [32, 32, 32, 32, 32, 32, 32, 32, 32, 32]
 [32, 32, 32, 32, 32, 32, 32, 32, 32, 32]
-[32, 32, 32, 123, 32, 32, 32, 32, 32, 32]
-[32, 32, 32, 123, 32, 32, 32, 32, 32, 32]
-[32, 32, 32, 123, 32, 32, 32, 32, 32, 32]
-[32, 32, 32, 123, 32, 32, 32, 32, 32, 32]
-[32, 32, 32, 123, 32, 32, 32, 32, 32, 32]
-[32, 32, 32, 123, 32, 32, 32, 32, 32, 32]
-[32, 32, 32, 123, 32, 32, 99, 32, 32, 32]
-[32, 32, 32, 123, 32, 32, 99, 32, 32, 32]
-[32, 32, 32, 123, 32, 32, 99, 32, 32, 32]
-[32, 32, 32, 123, 32, 32, 99, 32, 32, 32]
-[32, 32, 32, 123, 32, 32, 99, 32, 32, 32]
-[32, 32, 32, 123, 32, 32, 99, 32, 32, 32]
-[32, 32, 32, 123, 32, 32, 99, 32, 32, 32]
-[32, 32, 32, 123, 32, 32, 99, 32, 32, 32]
-Traceback (most recent call last):
-  File "/home/gaetan/VsCodeProject/serveur_memoire/etape-2/server_mem_backend.py", line 28, in <module>
-    for ligne in sys.stdin : # lit ligne par ligne jusqu'a un Ctrl + D
-                 ^^^^^^^^^
-KeyboardInterrupt
+[32, 32, 32, 32, 32, 32, 32, 32, 32, 32]
+[32, 32, 32, 32, 32, 32, 32, 32, 32, 32]
+[32, 32, 32, 32, 32, 32, 32, 32, 32, 32]
+[32, 32, 32, 32, 32, 32, 32, 32, 32, 32]
+[32, 32, 32, 32, 32, 32, 32, 32, 32, 32]
+[32, 32, 32, 32, 32, 32, 32, 32, 32, 32]
+[32, 32, 32, 32, 32, 32, 32, 32, 32, 32]
+[32, 32, 32, 32, 32, 32, 32, 32, 32, 32]
+[32, 32, 32, 32, 32, 32, 32, 32, 32, 32]
+[32, 32, 32, 32, 32, 32, 32, 32, 32, 32]
+[32, 32, 32, 32, 32, 32, 32, 32, 32, 32]
+[32, 32, 32, 56, 32, 32, 32, 32, 32, 32]
+[32, 32, 32, 56, 32, 32, 32, 32, 32, 32]
+[32, 32, 32, 56, 32, 32, 32, 32, 32, 32]
+[32, 32, 32, 56, 32, 32, 32, 32, 32, 32]
+[32, 32, 32, 56, 32, 32, 32, 32, 32, 32]

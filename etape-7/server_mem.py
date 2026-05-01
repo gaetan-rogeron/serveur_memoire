@@ -1,17 +1,19 @@
 import sys, os, socket, signal
 
-if __name__ == "__main__":
-
+def main():
     if len(sys.argv) < 3:
-        print("Usage: python server_mem.py <memsize> <port> [--debug] [--periodic-log <logfile>]", file=sys.stderr)
+        print("Usage: python server_mem.py memsize port (--debug) (--periodic-log fichier)", file=sys.stderr)
         sys.exit(1)
     
     taille_memoire = sys.argv[1]
-    port = int(sys.argv[2])
 
-    debug = False
+    try:
+        port = int(sys.argv[2])
+    except ValueError:
+        print("erreur: le port doit etre un entier")
+
     sauvegarde_periodique = False
-    fichier_log = ""
+    fichier_log = "mem.log"
 
     cmd_backend = ["python3","-u","server_mem_backend.py",taille_memoire] # -u pour enlever le buffering "toutes les reponses viennent apres le ctrl+D"
     cmd_frontend =["python3","-u","server_mem_frontend.py",taille_memoire]
@@ -25,7 +27,6 @@ if __name__ == "__main__":
                 break
 
     if "--debug" in sys.argv:
-        debug = True
         cmd_frontend.append("--debug")
 
 
@@ -95,7 +96,7 @@ if __name__ == "__main__":
             client_socket, addr = serveur_socket.accept()
             
             # le serveur lit la requete 
-            data = client_socket.recv(4046)
+            data = client_socket.recv(4096)
             if not data :
                 client_socket.close()
                 continue
@@ -137,3 +138,5 @@ if __name__ == "__main__":
         
 
 
+if __name__ == "__main__":
+    main()
